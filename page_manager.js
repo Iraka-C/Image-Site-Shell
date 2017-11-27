@@ -12,7 +12,7 @@ function selectSite(){
 }
 
 function getSiteBox(site){
-	var box=$("<div>&middot;&nbsp;"+site+"</div>");
+	var box=$("<div>"+(sites[site].invalid?"-":"&middot;")+"&nbsp;"+site+"</div>");
 	box.click(event=>{
 		profile.rating=0;
 		profile.site=site;

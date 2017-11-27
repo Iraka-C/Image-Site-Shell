@@ -13,13 +13,31 @@ var sites={
 	},
 	"Lolibooru":{
 		urlFunc:page=>"https://lolibooru.moe/post?page="+page,
+		//xmlFunc:page=>"https://lolibooru.moe/post/index.xml",
 		parseFunc:parseLolibooru
 	},
 	"Safebooru":{
 		urlFunc:page=>"http://safebooru.org/index.php?page=post&s=list&pid="+(page-1)*40,
 		parseFunc:parseSafebooru
+	},
+	"Zerochan":{
+		urlFunc:page=>"https://www.zerochan.net/?p="+page,
+		parseFunc:parseZerochan
+	},
+	"MiniTokyo":{
+		urlFunc:page=>"http://gallery.minitokyo.net/wallpapers?page="+page,
+		parseFunc:parseMiniTokyo
+	},
+	"E-Shuushuu":{
+		urlFunc:page=>"http://e-shuushuu.net/?page="+page,
+		parseFunc:parseEShuushuu
 	}
+
 };
+
+//========================= cross origin ======================
+// https://developer.yahoo.com/yql/
+
 //========================= General Handler =======================
 var toAppend=true;
 var imgNum;
@@ -38,14 +56,13 @@ function appendPage(){
 	});*/
 	$.ajax({
 		url:site.urlFunc(profile.page),
-		//success:text=>console.log("OK")
 		success:text=>parsePage(text,site.parseFunc),
 		error:(xhr,info,exception)=>{
 			console.log(exception);
 			$("#site_name").text(profile.site+" ~ Error");
+			sites[profile.site].invalid=1;
 		}
 	});
-	//$.getJSON(site.urlFunc(profile.page),{'dtype':'jsonp'},text=>console.log("OK"));
 }
 
 function startMainpage(){
@@ -174,6 +191,24 @@ function parseLolibooru(text){
 
 //========================== safebooru ===========================
 function parseSafebooru(text){
+	console.log(text);
+	// Cross Origin
+}
+
+//========================== zerochan ===========================
+function parseZerochan(text){
+	console.log(text);
+	// Cross Origin
+}
+
+//========================== zerochan ===========================
+function parseMiniTokyo(text){
+	console.log(text);
+	// Cross Origin
+}
+
+//========================== zerochan ===========================
+function parseEShuushuu(text){
 	console.log(text);
 	// Cross Origin
 }
