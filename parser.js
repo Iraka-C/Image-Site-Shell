@@ -108,11 +108,10 @@ function generateThumbImg(imgURL){
 			saveImg(imgURL.src);
 		}
 		else{ // zoom in in the current page ?
-			var imgWindow=window.open("","");
-			imgWindow.document.write("<div style='position:fixed;left:0px;top:0px;width:100%;height:100%;overflow:scroll'><img src='"+imgURL.src+"' style='position:absolute;left:0px;top:0px'/></div>");
+			var imgWindow=window.open(imgURL.src);
 			imgWindow.oncontextmenu=event=>{
+				// Confirm that first right_click won't trigger the menu
 				if(!imgWindow._initialized){
-					// Confirm that first right_click won't trigger the menu
 					imgWindow._initialized=true;
 					event.cancelBubble=true;
 					event.returnValue=false;
