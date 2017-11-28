@@ -1,11 +1,11 @@
-var sites={
+var sites={ // all corss-origin denied site has json response.
 	"yande.re":{
 		urlFunc:page=>"https://yande.re/post?page="+page,
 		parseFunc:parseYandeRe
 	},
 	"Konachan":{
-		urlFunc:page=>"https://konachan.net/post?page="+page,
-		parseFunc:parseKonachan
+		urlFunc:page=>"https://konachan.net/post.json?page="+page,
+		parseJSONFunc:parseKonachan
 	},
 	"Danbooru":{
 		urlFunc:page=>"https://danbooru.donmai.us/posts?page="+page,
@@ -14,6 +14,7 @@ var sites={
 	"Lolibooru":{
 		urlFunc:page=>"https://lolibooru.moe/post?page="+page,
 		//xmlFunc:page=>"https://lolibooru.moe/post/index.xml",
+		// or .json also works -> use jsonp ?
 		parseFunc:parseLolibooru
 	},
 	"Safebooru":{
@@ -47,22 +48,26 @@ function appendPage(){
 	toAppend=false;
 	imgNum=0;
 	imgLoad=0;
-	profile.page++;
 	$("#site_name").text("Loading Page "+profile.page+" ...");
 
 	var site=sites[profile.site];
-	/*$.get(site.urlFunc(profile.page),text=>{
-		parsePage(text,site.parseFunc);
-	});*/
-	$.ajax({
-		url:site.urlFunc(profile.page),
-		success:text=>parsePage(text,site.parseFunc),
-		error:(xhr,info,exception)=>{
-			console.log(exception);
-			$("#site_name").text(profile.site+" ~ Error");
-			sites[profile.site].invalid=1;
-		}
-	});
+	if(site.parseFunc){
+		$.ajax({
+			url:site.urlFunc(profile.page),
+			success:text=>parsePage(text,site.parseFunc),
+			error:(xhr,info,exception)=>{
+				console.log(exception);
+				$("#site_name").text(profile.site+" ~ Error");
+				sites[profile.site].invalid=1;
+			}
+		});
+	}
+	else if(site.parseJSONFunc){
+		$.getCrossOriginJSON(
+			site.urlFunc(profile.page),
+			text=>parsePage(text,site.parseJSONFunc)
+		);
+	}
 }
 
 function startMainpage(){
@@ -72,7 +77,7 @@ function startMainpage(){
 
 function refresh(){
 	$("#images").html("");
-	profile.page=0;
+	profile.page=1;
 	toAppend=true;
 	appendPage();
 }
@@ -83,6 +88,8 @@ function parsePage(text,parser){
 		$("#site_name").text(profile.site+" ~ Empty");
 		return;
 	}
+
+	profile.page++;
 	imgNum=imgs.length;
 	for(var v in imgs){
 		if(imgs[v]){
@@ -101,7 +108,20 @@ function generateThumbImg(imgURL){
 			saveImg(imgURL.src);
 		}
 		else{ // zoom in in the current page ?
-			window.open(imgURL.src);
+			var imgWindow=window.open("","");
+			imgWindow.document.write("<div style='position:fixed;left:0px;top:0px;width:100%;height:100%;overflow:scroll'><img src='"+imgURL.src+"' style='position:absolute;left:0px;top:0px'/></div>");
+			imgWindow.oncontextmenu=event=>{
+				if(!imgWindow._initialized){
+					// Confirm that first right_click won't trigger the menu
+					imgWindow._initialized=true;
+					event.cancelBubble=true;
+					event.returnValue=false;
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
 		}
 	});
 	return box;
@@ -136,9 +156,11 @@ function parseYandeRePost(post){
 
 	var imgRating=thumbDiv.alt;
 	imgRating=imgRating.slice(8,imgRating.indexOf("Score:")-1);
-	imgRating={"Safe":0,"Questionable":1,"Explicit":2}[imgRating]||0;
+	imgRating={"Safe":2,"Questionable":1,"Explicit":0}[imgRating]||0;
+	// Always consider an undefined as NOT safe
+
 	//console.log(imgRating);
-	if(imgRating<=profile.rating){
+	if(imgRating>=profile.rating){
 		return {thumb:thumbURL,src:imgLink};
 	}
 	else{
@@ -147,9 +169,20 @@ function parseYandeRePost(post){
 }
 
 //========================== konachan.net ===========================
-function parseKonachan(text){
-	console.log(text);
+function parseKonachan(posts){
+	//console.log(text);
 	// Cross Origin
+	var imgs=[];
+	for(var i=0;i<posts.length;i++){
+		var post=posts[i];
+		var thumbURL="https:"+post.preview_url;
+		var imgLink="https:"+post.file_url;
+		var imgRating={"s":2,"q":1,"e":0}[post.rating]||0;
+		if(imgRating>=profile.rating){
+			imgs.push({thumb:thumbURL,src:imgLink});
+		}
+	}
+	return imgs;
 }
 
 //========================== danbooru ===========================
@@ -173,9 +206,8 @@ function parseDanbooruPost(post){
 	imgLink="https://danbooru.donmai.us"+imgLink.slice(imgLink.indexOf("/data/"),imgLink.length);
 
 	var imgRating=post.attr("data-rating");
-	console.log(imgRating);
-	imgRating={"s":0,"q":1,"e":2}[imgRating]||0;
-	if(imgRating<=profile.rating){
+	imgRating={"s":2,"q":1,"e":0}[imgRating]||0;
+	if(imgRating>=profile.rating){
 		return {thumb:thumbURL,src:imgLink};
 	}
 	else{
@@ -224,7 +256,7 @@ function scrollPage(){
 	//console.log("scroll");
 	var bottomIn=$("#images").offset().top+$("#images").height();
 	var bottomOut=$("#scroll_outer").offset().top+$("#scroll_outer").height();
-	console.log(bottomIn+","+bottomOut);
+	//console.log(bottomIn+","+bottomOut);
 	if(bottomIn-10<=bottomOut){
 		console.log("you are at the bottom");
 		//$("#morePageButton").css("display","none");
@@ -234,8 +266,8 @@ function scrollPage(){
 
 function shiftRating(){
 	console.log("Shift Rating");
-	profile.rating=(profile.rating+1)%3;
-	$("#rating").text(["Safe","R15+","R18+"][profile.rating]);
-	$("#banner").css("background-color",["#AEF","#EA0","#E00"][profile.rating]);
+	profile.rating=(profile.rating+2)%3;
+	$("#rating").text(["R18+","R15+","Safe"][profile.rating]);
+	$("#banner").css("background-color",["#E00","#EA0","#AEF"][profile.rating]);
 	startMainpage();
 }

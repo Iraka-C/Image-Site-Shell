@@ -6,19 +6,21 @@
 		</script>
 		<script type="text/javascript">
 			var profile={
-				rating:0, // 0:safe, 1:R15+, 2:R18+
+				rating:2, // 2:safe, 1:R15+, 0:R18+
 				site:"yande.re",
-				page:0 // now page
+				page:1 // now page
 			};
 			document.oncontextmenu=nocontextmenu; // for IE5+
 			function nocontextmenu(event){
-				event.cancelBubble=true
+				event.cancelBubble=true;
 				event.returnValue=false;
 				return false;
 			}
 		</script>
 		<script src=".\parser.js"></script>
 		<script src=".\page_manager.js"></script>
+		<script src=".\crossoriginAJAX.js"></script>
+
 		<style>
 			body{
 				margin:0px;

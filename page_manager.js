@@ -14,7 +14,7 @@ function selectSite(){
 function getSiteBox(site){
 	var box=$("<div>"+(sites[site].invalid?"-":"&middot;")+"&nbsp;"+site+"</div>");
 	box.click(event=>{
-		profile.rating=0;
+		//profile.rating=2; // rating not changed
 		profile.site=site;
 		startMainpage();
 	});
