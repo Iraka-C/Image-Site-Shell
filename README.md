@@ -8,9 +8,10 @@ Currently support:<br/>
 * yande.re<br/>
 * Konachan<br/>
 * Danbooru<br/>
+* Lolibooru<br/>
 <br/>
 
 By recomposing the UI, an easier environment to browse pictures is provided, and you needn't worry about finding the source URL, blocking ads or manually switching pages.
 
 ## Cross Origin Resources
-Image Site Shell uses YQL Ajax service for cross-origin data fetching, therefore proxies are not necessary for this shell and all operations can be performed at the browser front-end.
+Image Site Shell uses YQL Ajax service for cross-origin xml/json data fetching, therefore proxies are not necessary for this shell and all operations can be performed at the browser front-end.
