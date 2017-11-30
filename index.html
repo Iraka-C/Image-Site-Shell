@@ -19,6 +19,7 @@
 			function setFontSize(){ // Font size according PC/mobile
 				if(window.location.href==/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
 				//if(document.body.clientHeight>document.body.clientWidth){
+					$("#site_name").text("browser");
 					$(document.body).css("font-size","48px");
 				}
 				else{
