@@ -12,28 +12,15 @@ var sites={ // all corss-origin denied site has json response.
 		parseFunc:parseDanbooru
 	},
 	"Lolibooru":{
-		urlFunc:page=>"https://lolibooru.moe/post?page="+page,
+		urlFunc:page=>"https://lolibooru.moe/post.json?page="+page,
 		//xmlFunc:page=>"https://lolibooru.moe/post/index.xml",
-		// or .json also works -> use jsonp ?
-		parseFunc:parseLolibooru
-	},
-	"Safebooru":{
-		urlFunc:page=>"http://safebooru.org/index.php?page=post&s=list&pid="+(page-1)*40,
-		parseFunc:parseSafebooru
-	},
-	"Zerochan":{
-		urlFunc:page=>"https://www.zerochan.net/?p="+page,
-		parseFunc:parseZerochan
-	},
-	"MiniTokyo":{
-		urlFunc:page=>"http://gallery.minitokyo.net/wallpapers?page="+page,
-		parseFunc:parseMiniTokyo
-	},
-	"E-Shuushuu":{
-		urlFunc:page=>"http://e-shuushuu.net/?page="+page,
-		parseFunc:parseEShuushuu
+		// or .json also works -> use jsonp ? NO!
+		parseJSONFunc:parseLolibooru
 	}
-
+	//"Safebooru": API cross-origin limitation
+	//"Zerochan": No API applied
+	//"MiniTokyo": No API applied
+	//"E-Shuushuu": No applicable API applied
 };
 
 //========================= cross origin ======================
@@ -215,9 +202,19 @@ function parseDanbooruPost(post){
 }
 
 //========================== lolibooru ===========================
-function parseLolibooru(text){
-	console.log(text);
-	// Cross Origin
+function parseLolibooru(posts){
+	//console.log(posts);
+	var imgs=[];
+	for(var i=0;i<posts.length;i++){ // Basically same to Konachan
+		var post=posts[i];
+		var thumbURL=post.preview_url;
+		var imgLink=post.file_url;
+		var imgRating={"s":2,"q":1,"e":0}[post.rating]||0;
+		if(imgRating>=profile.rating){
+			imgs.push({thumb:thumbURL,src:imgLink});
+		}
+	}
+	return imgs;
 }
 
 //========================== safebooru ===========================
@@ -264,6 +261,21 @@ function scrollPage(){
 }
 
 function shiftRating(){
+
+	// Safe Button
+	console.log(shiftRating.record);
+	if(shiftRating.record===undefined){
+		shiftRating.record=0;
+		return;
+	}
+	else if(shiftRating.record<10){
+		shiftRating.record++;
+		if(shiftRating.record==7){
+			$("#site_name").text("Mind your behavior!");
+		}
+		return;
+	}
+
 	console.log("Shift Rating");
 	profile.rating=(profile.rating+2)%3;
 	$("#rating").text(["R18+","R15+","Safe"][profile.rating]);

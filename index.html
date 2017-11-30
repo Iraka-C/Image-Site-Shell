@@ -16,6 +16,15 @@
 				event.returnValue=false;
 				return false;
 			}
+			function setFontSize(){ // Font size according PC/mobile
+				if(window.location.href==/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+					$(document.body).css("font-size","36px");
+				}
+				else{
+					$(document.body).css("font-size","24px");
+				}
+			}
+			//$(window).resize(setFontSize);
 		</script>
 		<script src=".\parser.js"></script>
 		<script src=".\page_manager.js"></script>
@@ -102,14 +111,14 @@
 			#morePageButton{
 				cursor: pointer;
 				text-align: center;
-				font-size: 24px;
+				font-size: 100%;
 				margin: 12px;
 				color: #999;
 			}
 		</style>
 		<title>Image Site Viewer</title>
 	</head>
-	<body onload="startMainpage();">
+	<body onload="setFontSize();startMainpage();">
 		<div id="banner" class="noselect">
 			<div id="site_name" onclick="selectSite()">yande.re</div>
 			<div id="rating" onclick="shiftRating()">Safe</div>
