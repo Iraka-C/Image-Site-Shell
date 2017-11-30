@@ -17,7 +17,8 @@
 				return false;
 			}
 			function setFontSize(){ // Font size according PC/mobile
-				if(window.location.href==/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+				//if(window.location.href==/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+				if(document.body.clientHeight>document.body.clientWidth){
 					$(document.body).css("font-size","36px");
 				}
 				else{
