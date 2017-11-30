@@ -286,15 +286,31 @@ function shiftRating(){
 	}
 	else if(shiftRating.record<10){
 		shiftRating.record++;
-		if(shiftRating.record==7){
-			$("#site_name").text("Mind your behavior!");
+		switch(shiftRating.record){
+			case 7:
+				$("#site_name").text("What're you doing?!");
+				break;
+			case 8:
+				$("#site_name").text("Mind your behavior!");
+				break;
+			case 9:
+				$("#site_name").text("You'd be careful!");
+				break;
+			case 10:
+				$("#site_name").text("Well, alright...");
+				break;
+			default:
 		}
 		return;
 	}
 
 	console.log("Shift Rating");
+	// Change address bar color - mobile browser
 	profile.rating=(profile.rating+2)%3;
 	$("#rating").text(["R18+","R15+","Safe"][profile.rating]);
-	$("#banner").css("background-color",["#E00","#EA0","#AEF"][profile.rating]);
+
+	var color=["#E00","#EA0","#AEF"][profile.rating];
+	$("#banner").css("background-color",color);
+	$(".theme-color-meta").attr("content",color);
 	startMainpage();
 }
