@@ -36,7 +36,17 @@ function appendPage(){
 	imgNum=0;
 	imgLoad=0;
 	$("#site_name").text("Loading Page "+profile.page+" ...");
-
+	$("#images").append( // page indicator
+		$("<div></div>")
+		.text(profile.page)
+		.css({
+			"color":"#CCC",
+			"font-size":"144px",
+			"display":"inline-block",
+			"margin":"24px 48px 0px 48px",
+			"vertical-align":"top"
+		})
+	);
 	var site=sites[profile.site];
 	if(site.parseFunc){
 		$.ajax({
@@ -124,6 +134,12 @@ function reportLoad(){
 //========================== yande.re ===========================
 function parseYandeRe(text){
 	//console.log(text);
+	/*for(var i=text.indexOf("Post.register(",text.indexOf("Post.register_tags(")); // extract all json info ?
+	    i>=0;
+		i=text.indexOf("Post.register(",i+1)){
+		console.log(i);
+	}*/
+
 	var posts=$(text).find("ul#post-list-posts").children();
 	var imgs=[];
 	for(var i=0;i<posts.length;i++){
