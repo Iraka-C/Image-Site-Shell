@@ -37,7 +37,7 @@ function appendPage(){
 	imgLoad=0;
 	$("#site_name").text("Loading Page "+profile.page+" ...");
 	$("#images").append( // page indicator
-		$("<div></div>")
+		$("<div class='.noselect'></div>")
 		.text(profile.page)
 		.css({
 			"color":"#CCC",
