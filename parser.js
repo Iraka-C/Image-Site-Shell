@@ -204,9 +204,10 @@ function parseDanbooru(text){
 function parseDanbooruPost(post){
 	var thumbDiv=post.children("a").children("img").get(0);
 	var thumbURL=thumbDiv.src;
-	thumbURL="http://danbooru.donmai.us"+thumbURL.slice(thumbURL.indexOf("/data/"),thumbURL.length);
+	// Can't visit issue on https?
+	thumbURL="https://danbooru.donmai.us"+thumbURL.slice(thumbURL.indexOf("/data/"),thumbURL.length);
 	var imgLink=post.attr("data-file-url");
-	imgLink="http://danbooru.donmai.us"+imgLink.slice(imgLink.indexOf("/data/"),imgLink.length);
+	imgLink="https://danbooru.donmai.us"+imgLink.slice(imgLink.indexOf("/data/"),imgLink.length);
 
 	var imgRating=post.attr("data-rating");
 	imgRating={"s":2,"q":1,"e":0}[imgRating]||0;
