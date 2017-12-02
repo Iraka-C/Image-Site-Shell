@@ -39,13 +39,7 @@ function appendPage(){
 	$("#images").append( // page indicator
 		$("<div class='.noselect'></div>")
 		.text(profile.page)
-		.css({
-			"color":"#CCC",
-			"font-size":"144px",
-			"display":"inline-block",
-			"margin":"24px 48px 0px 48px",
-			"vertical-align":"top"
-		})
+		.addClass("imgPageNumber")
 	);
 	var site=sites[profile.site];
 	if(site.parseFunc){
@@ -92,19 +86,26 @@ function parsePage(text,parser){
 		if(imgs[v]){
 			var thumbImg=generateThumbImg(imgs[v]);
 			var imgDiv=$("<div></div>").append(thumbImg).addClass("imgBox");
-			$("#images").append(imgDiv);
+			thumbImg.attr("onload",()=>{
+				reportLoad();
+				$("#images").append(imgDiv);
+			});
+			/*thumbImg.attr("onerror",()=>{
+				//imgDiv.text("Error");
+				console.log("error");
+			});*/
 		}
 	}
 }
 
 function generateThumbImg(imgURL){
 	var box=$("<img/>").attr("src",imgURL.thumb);
-	box.addClass("img").attr("onload",reportLoad);
+	box.addClass("img");
 	box.mousedown(event=>{
 		if(event.button==0){
 			saveImg(imgURL.src);
 		}
-		else{ // zoom in in the current page ?
+		else{ // zoom in at the current page ?
 			var imgWindow=window.open(imgURL.src);
 			imgWindow.oncontextmenu=event=>{
 				// Confirm that first right_click won't trigger the menu
@@ -288,17 +289,17 @@ function shiftRating(){
 		shiftRating.record++;
 		switch(shiftRating.record){
 			case 7:
-				$("#site_name").text("What're you doing?!");
+				$("#site_name").text("Beware!!");
 				break;
-			case 8:
-				$("#site_name").text("Mind your behavior!");
+			/*case 8:
+				$("#site_name").text("");
 				break;
 			case 9:
-				$("#site_name").text("You'd be careful!");
+				$("#site_name").text("");
 				break;
 			case 10:
-				$("#site_name").text("Well, alright...");
-				break;
+				$("#site_name").text("");
+				break;*/
 			default:
 		}
 		return;
