@@ -204,7 +204,7 @@ function parseDanbooru(text){
 function parseDanbooruPost(post){
 	var thumbDiv=post.children("a").children("img").get(0);
 	var thumbURL=thumbDiv.src;
-	thumbURL="https://danbooru.donmai.us"+thumbURL.slice(thumbURL.indexOf("/data/"),thumbURL.length);
+	thumbURL="http://danbooru.donmai.us"+thumbURL.slice(thumbURL.indexOf("/data/"),thumbURL.length);
 	var imgLink=post.attr("data-file-url");
 	imgLink="https://danbooru.donmai.us"+imgLink.slice(imgLink.indexOf("/data/"),imgLink.length);
 
