@@ -8,7 +8,8 @@ Currently support:<br/>
 * yande.re<br/>
 * Konachan<br/>
 * Danbooru<br/>
-* Lolibooru<br/>
+<!-- * Lolibooru<br/> -->
+etc.<br/>
 <br/>
 
 By recomposing the UI, an easier environment to browse pictures is provided, and you needn't worry about finding the source URL, blocking ads or manually switching pages.
