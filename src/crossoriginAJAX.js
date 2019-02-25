@@ -1,3 +1,7 @@
+/*
+	This cross origin fetcher is depricated due to the shut down of YQL.
+	Other Web APIs shall be used (without cross-origin request).
+ */
 (function(){
 	if(!jQuery){
 		console.log("jQuery Not Found!");
@@ -7,8 +11,8 @@
 		var query="select * from json where url='"+uri+"'";
 		var queryURL="https://query.yahooapis.com/v1/public/yql?q="+encodeURIComponent(query)+"&format=json";
 		$.ajax({
-	        url:queryURL,
-	        success:data=>{
+			url:queryURL,
+			success:data=>{
 				callback(data.query.results.json.json);
 			},
 			error:(xhr,info,exception)=>{
@@ -20,8 +24,8 @@
 		var query="select * from xml where url='"+uri+"'";
 		var queryURL="https://query.yahooapis.com/v1/public/yql?q="+encodeURIComponent(query)+"&format=xml";
 		$.ajax({
-	        url:queryURL,
-	        success:data=>{
+			url:queryURL,
+			success:data=>{
 				callback($(data).children("query").children("results").children().get(0));
 			},
 			error:(xhr,info,exception)=>{

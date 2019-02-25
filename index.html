@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js"
-			integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-			crossorigin="anonymous">
-		</script>
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous"></script>
 		<script type="text/javascript">
 			var profile={
 				rating:2, // 2:safe, 1:R15+, 0:R18+
-				site:"yande.re",
+				site:"",
 				page:1 // now page
 			};
 			document.oncontextmenu=nocontextmenu; // for IE5+
@@ -18,40 +18,55 @@
 			}
 			var browser={
 				versions:function(){
-				var u = navigator.userAgent, app = navigator.appVersion;
-				return{
-					trident: u.indexOf('Trident') > -1,                           // IE core
-					presto:  u.indexOf('Presto') > -1,                            // opera core
-					webKit:  u.indexOf('AppleWebKit') > -1,                       // apple/google core
-					gecko:   u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, // firefox core
-					mobile:  !!u.match(/AppleWebKit.*Mobile.*/),                  // mobile device
-					ios:     !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),          // ios device
-					android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,  // android device
-					iPhone:  u.indexOf('iPhone') > -1 ,                           // iPhone or QQHD browser
-					iPad:    u.indexOf('iPad') > -1,                              // iPad
-					webApp:  u.indexOf('Safari') == -1,                           // web app
-					weixin:  u.indexOf('MicroMessenger') > -1,                    // msg (WeChat)
-					qq:      u.match(/\sQQ/i) == " qq"                            // qq
-				};
+					var u=navigator.userAgent;
+					var app=navigator.appVersion;
+					return{
+						trident: u.indexOf('Trident') > -1,                           // IE core
+						presto:  u.indexOf('Presto') > -1,                            // opera core
+						webKit:  u.indexOf('AppleWebKit') > -1,                       // apple/google core
+						gecko:   u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, // firefox core
+						mobile:  !!u.match(/AppleWebKit.*Mobile.*/),                  // mobile device
+						ios:     !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),          // ios device
+						android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,  // android device
+						iPhone:  u.indexOf('iPhone') > -1 ,                           // iPhone or QQHD browser
+						iPad:    u.indexOf('iPad') > -1,                              // iPad
+						webApp:  u.indexOf('Safari') == -1,                           // web app
+						weixin:  u.indexOf('MicroMessenger') > -1,                    // msg (WeChat)
+						qq:      u.match(/\sQQ/i) == " qq"                            // qq
+					};
 				}(),
-				language:(navigator.browserLanguage || navigator.language).toLowerCase()
+				language:(navigator.browserLanguage||navigator.language).toLowerCase()
 			}
 
-			function setFontSize(){ // Font size according PC/mobile
-				//if(window.location.href==/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+			/*
+				@TODO
+				Should be converted to css-switching method !!!!!
+			*/
+			function initEnvironment(){ // Font size according PC/mobile
 				//if(document.body.clientHeight>document.body.clientWidth){
 				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
-					$(document.body).css("font-size","48px");
+					$("#css_id").attr("href","style_mobile.css");
 				}
 				else{
-					$(document.body).css("font-size","24px");
+					$("#css_id").attr("href","style.css");
 				}
 			}
-			//$(window).resize(setFontSize);
+			
+			// Initialization on page loaded
+			$(()=>{
+				initEnvironment();
+				//startMainpage();
+				selectSite();
+			});
 		</script>
-		<script src=".\parser.js"></script>
-		<script src=".\page_manager.js"></script>
-		<script src=".\crossoriginAJAX.js"></script>
+		<!-- Individual Site Parsers -->
+		<script src="src/parser_yandere.js"></script>
+		<script src="src/parser_konachan.js"></script>
+		<script src="src/parser_danbooru.js"></script>
+		<!-- General Parser & Controllers -->
+		<script src="src/parser.js"></script>
+		<script src="src/page_manager.js"></script>
+		<!--script src=".\crossoriginAJAX.js"></script--> <!-- Depricated -->
 
 		<meta class="theme-color-meta" name="theme-color" content="#AEF"/>
 		<!-- Windows Phone -->
@@ -59,132 +74,27 @@
 		<!-- iOS Safari -->
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta class="theme-color-meta" name="apple-mobile-web-app-status-bar-style" content="#AEF">
-
-		<style>
-			body{
-				margin:0px;
-				font-family: Consolas, monospace;
-				font-size: 24px;
-			}
-			.imgBox{
-				display:inline-block;
-				min-width: 160px;
-				min-height: 160px;
-				line-height: 160px;
-				color: #D88;
-				overflow:hidden;
-				text-align: center;
-				vertical-align: text-bottom;
-			}
-			.img{
-				background-color: #FFF;
-				box-shadow: 0px 0px 15px #888;
-				margin: 15px;
-				z-index: 5;
-			}
-			.imgPageNumber{
-				color: #CCC;
-				font-size: 144px;
-				display: inline-block;
-				margin: 24px 48px 12px 48px;
-				vertical-align: top;
-				letter-spacing: -8px;
-			}
-			#banner{
-				position: fixed;
-				width: 100%;
-				background-color: #AEF;
-				box-shadow:0px 0px 15px #888;
-				z-index: 3;
-				text-align: center;
-				padding: 6px;
-			}
-			#site_name{
-				display:inline-block;
-			}
-			#rating{
-				display:inline-block;
-				position: absolute;
-				right: 24px;
-				z-index: 4;
-				color: #999;
-			}
-			#main_column{
-				position: fixed;
-				width: 100%;
-				height: 100%;
-				z-index: 1;
-			}
-			#scroll_outer{
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				background-color: #EEE;
-				overflow-y: scroll;
-				z-index: 2;
-			}
-			.noselect{
-				cursor: default;
-				-webkit-touch-callout: none; /* iOS Safari */
-				-webkit-user-select: none; /* Chrome/Safari/Opera */
-				-khtml-user-select: none; /* Konqueror */
-				-moz-user-select: none; /* Firefox */
-				-ms-user-select: none; /* Internet Explorer/Edge */
-				user-select: none; /* Non-prefixed version, currently
-				not supported by any browser */
-			}
-			#setting_cover{
-				display: none;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				background-color: #000;
-				z-index: 10;
-				opacity: 0.7;
-				text-align: center;
-			}
-			#setting_panel{
-				display:inline-block;
-				width: 50%;
-				height: 50%;
-				color: #FFF;
-				text-align: left;
-				border-width: 2px;
-				border-style: solid none solid none;
-				border-color: #ffffff;
-				text-overflow: ellipsis;
-				overflow-y: scroll;
-			}
-			#morePageButton{
-				cursor: pointer;
-				text-align: center;
-				font-size: 100%;
-				margin: 12px;
-				color: #999;
-			}
-		</style>
+		<link id="css_id" rel="stylesheet" type="text/css" href="style.css"/>
+		
 		<title>Image Site Viewer</title>
 	</head>
-	<body onload="setFontSize();startMainpage();">
+	<body>
 		<div id="banner" class="noselect">
-			<div id="site_name" onclick="selectSite()">yande.re</div>
+			<div id="site_name" onclick="selectSite()">Select Image Site</div>
+			<div id="header_hint">Loading...</div>
 			<div id="rating" onclick="shiftRating()">Safe</div>
 		</div>
 
 		<div id="main_column">
-			<div id="setting_cover" class="noselect" onclick="selectSite()">
-				<div>&nbsp;</div>
-				<div>&nbsp;</div>
-				<div id="setting_panel">
+			<div id="scroll_outer" onscroll="scrollPage()">
+				<div id="images" style="text-align:center;width:100%"></div>
+				<div id="more_page_button" class="noselect" onclick="appendPage()">
+					&gt;&nbsp;Load More&nbsp;&lt;
 				</div>
 			</div>
-
-			<div id="scroll_outer" onscroll="scrollPage()">
-				<div>&nbsp;</div>
-				<div>&nbsp;</div>
-				<div id="images" style="text-align:center;width:100%">
+			<div id="setting_cover" class="noselect" onclick="selectSite()">
+				<div id="setting_panel">
 				</div>
-				<div id="morePageButton" class="noselect" onclick="appendPage()">&gt;&nbsp;Load More&nbsp;&lt;</div>
 			</div>
 		</div>
 	</body>

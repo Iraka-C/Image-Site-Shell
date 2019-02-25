@@ -1,0 +1,130 @@
+body{
+	position: absolute;
+	margin: 0px;
+	width: 100%;
+	height: 100%;
+	font-family: Consolas, monospace;
+	font-size: 24px;
+	flex-flow: column;
+	display: flex;
+}
+
+/* Image post boxes */
+
+.imgBox{
+	display:inline-block;
+	position: relative;
+	min-width: 160px;
+	min-height: 160px;
+	line-height: 160px;
+	color: #D88;
+	overflow:hidden;
+	text-align: center;
+	vertical-align: text-bottom;
+	box-shadow: 0em 0em 1em #888;
+	margin: 0.5em;
+}
+.img{
+	background-color: #FFF;
+}
+.imgCover{
+	width: 100%;
+	/*height: 1em;*/
+	background-color: #000;
+	opacity: 0.5;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	line-height: initial;
+	font-size: 70%;
+	color: #FFF;
+	text-overflow: ellipsis;
+}
+.imgPageNumber{
+	color: #CCC;
+	font-size: 144px;
+	display: inline-block;
+	margin: 24px 48px 12px 48px;
+	vertical-align: top;
+	letter-spacing: -8px;
+}
+
+/* Main containers */
+
+#banner{
+	flex: 0 1 auto;
+	width: 100%;
+	background-color: #AEF;
+	box-shadow:0px 0px 15px #888;
+	text-align: center;
+	z-index: 1;
+}
+#site_name{
+	display: inline-block;
+	margin: 0.2em;
+}
+#header_hint{
+	display: none;
+	margin: 0.2em;
+}
+
+#rating{
+	display: inline-block;
+	position: absolute;
+	right: 0.2em;
+	color: #999;
+	margin: 0.2em;
+}
+#main_column{
+	flex: 1 1 auto;
+	position: relative;
+	width: 100%;
+	z-index: 0;
+}
+#scroll_outer{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #EEE;
+	overflow-y: scroll;
+}
+.noselect{
+	cursor: default;
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Chrome/Safari/Opera */
+	-khtml-user-select: none; /* Konqueror */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+	not supported by any browser */
+}
+#setting_cover{
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.7;
+	text-align: center;
+}
+#setting_panel{
+	display:inline-block;
+	margin-top: 2em;
+	width: 50%;
+	height: 50%;
+	color: #FFF;
+	text-align: left;
+	border-width: 2px;
+	border-style: solid none solid none;
+	border-color: #ffffff;
+	text-overflow: ellipsis;
+	
+}
+#more_page_button{
+	cursor: pointer;
+	text-align: center;
+	font-size: 100%;
+	margin: 12px;
+	color: #999;
+	display: none;
+}
