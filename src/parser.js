@@ -108,11 +108,20 @@ function parsePage(text,parser){
 }
 
 function generateThumbImg(imgURL){
+	// Avoid 403 of some sites
+	// Some browsers will automatically switch to https
+	// so manual operations are still neccessary
+	if(imgURL.src.substring(0,5)=="https"){
+		imgURL.src="http"+imgURL.src.slice(5);
+	}
+
 	var box=$("<img/>").attr("src",imgURL.thumb);
 	box.addClass("img");
 	box.mousedown(event=>{
 		if(event.button==0){
-			saveImg(imgURL.src);
+			if(!profile.isChromeDesktop){
+				saveImg(imgURL.src);
+			}
 		}
 		else{ // @TODO: zoom in at the current page ?
 			event.cancelBubble=true;

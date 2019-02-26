@@ -10,7 +10,8 @@
 				site:"",
 				page:1, // now page
 				minThumbSize:240,
-				isMobile:false
+				isMobile:false,
+				isChromeDesktop:false
 			};
 			document.oncontextmenu=nocontextmenu; // for IE5+
 			function nocontextmenu(event){
@@ -58,10 +59,15 @@
 			// Initialization on page loaded
 			$(()=>{
 				initEnvironment();
+				console.log(browser);
+				
 				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
 					$("#comment").css("display","block");
 				}
 				else{
+					if(browser.versions.webKit){
+						profile.isChromeDesktop=true;
+					}
 					selectSite();
 				}
 			});
