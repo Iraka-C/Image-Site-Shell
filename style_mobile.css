@@ -92,14 +92,6 @@ body{
 	text-align: center;
 	width: 100%;
 }
-#comment{
-	display: none;
-	font-size: 70%;
-	padding: 1em;
-	color: #FFF;
-	background-color: #000;
-	opacity: 0.5;
-}
 .noselect{
 	cursor: default;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -139,4 +131,20 @@ body{
 	margin: 12px;
 	color: #999;
 	display: none;
+}
+
+#comment{
+	display: none;
+	font-size: 70%;
+	padding: 1em;
+	color: #FFF;
+	background-color: #000;
+	opacity: 0.5;
+}
+#comment_zh_cn{
+	display: none;
+	padding: 1em;
+	color: #FFF;
+	background-color: #000;
+	opacity: 0.5;
 }

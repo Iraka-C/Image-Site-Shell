@@ -57,13 +57,22 @@
 					}
 					$("#css_id").attr("href","style.css");
 				}
+				// Language Issues
+				if(browser.language.indexOf("zh")>-1){
+					$("#site_name").text("选择图站");
+				}
 			}
 			
 			// Initialization on page loaded
 			$(()=>{
 				initEnvironment();
 				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
-					$("#comment").css("display","block");
+					if(browser.language.indexOf("zh")>-1){
+						$("#comment_zh_cn").css("display","block");
+					}
+					else{
+						$("#comment").css("display","block");
+					}
 				}
 				else{
 					selectSite();
@@ -102,8 +111,16 @@
 					We detected that you are using a mobile browser client.<br/><br/>
 					Some websites refuse mobile client requests
 					and images may not properly display.<br/><br/>
-					For a better experience, please switch to the desktop mode
+					For a better experience, please switch to the
+					<span style="font-weight: bold">desktop mode</span>
 					(which can probably be found in browser settings).
+				</div>
+				<div id="comment_zh_cn">
+					检测到您正在使用浏览器移动端。<br/><br/>
+					有些网站会屏蔽移动端浏览器发出的请求，因此图片可能不会被正常显示。<br/><br/>
+					为了更好的使用体验，请切换浏览器至
+					<span style="font-weight: bold">桌面模式</span>
+					（请求桌面版网页）。一般可在浏览器设置中开启。
 				</div>
 				<div id="images"></div>
 				<div id="more_page_button" class="noselect" onclick="appendPage()">
