@@ -90,7 +90,7 @@ function parsePage(text,parser){
 				var w=thumbImgBox[0].width;
 				var h=thumbImgBox[0].height;
 				var size=w>h?w:h;
-				if(profile.isMobile&&size<profile.minThumbSize){
+				if(size<profile.minThumbSize){
 					var k=profile.minThumbSize/size;
 					thumbImgBox[0].width=w*k;
 					thumbImgBox[0].height=h*k;
@@ -112,17 +112,21 @@ function generateThumbImg(imgURL){
 	box.addClass("img");
 	box.mousedown(event=>{
 		if(event.button==0){
-			var filename=imgURL.src.substr(imgURL.src.lastIndexOf("/")+1);
-			saveImg(imgURL.src,filename);
+			saveImg(imgURL.src);
 		}
 		else{ // @TODO: zoom in at the current page ?
+			event.cancelBubble=true;
+			event.preventDefault=true;
 			var imgWindow=window.open(imgURL.src); // @TODO: Mobile client operation ?
 			imgWindow.oncontextmenu=event=>{
 				// Confirm that first right_click won't trigger the menu
+				// Still can't make sure:
+				// the mousedown is at the previous page & mouseup at the new page
+				// which also calls out the context menu
+				event.cancelBubble=true;
+				event.preventDefault=true;
 				if(!imgWindow._initialized){
 					imgWindow._initialized=true;
-					event.cancelBubble=true;
-					event.preventDefault=true;
 					event.returnValue=false;
 					return false;
 				}
