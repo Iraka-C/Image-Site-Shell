@@ -46,12 +46,15 @@
 				//if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
 					$("#css_id").attr("href","style_mobile.css");
 					$(document.body).css("font-size",document.body.clientWidth/20+"px");
-					profile.minThumbSize=document.body.clientWidth/3.5;
+					profile.minThumbSize=document.body.clientWidth/2.5;
 					console.log("Minsize = "+profile.minThumbSize);
 					
 					profile.isMobile=true;
 				}
 				else{
+					if(browser.versions.webKit){
+						profile.isChromeDesktop=true;
+					}
 					$("#css_id").attr("href","style.css");
 				}
 			}
@@ -59,15 +62,10 @@
 			// Initialization on page loaded
 			$(()=>{
 				initEnvironment();
-				console.log(browser);
-				
 				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
 					$("#comment").css("display","block");
 				}
 				else{
-					if(browser.versions.webKit){
-						profile.isChromeDesktop=true;
-					}
 					selectSite();
 				}
 			});

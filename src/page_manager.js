@@ -19,7 +19,7 @@ function showHint(){
 
 function hideHint(info){
 	$("#header_hint").css("display","none");
-	$("#site_name").text(profile.site+(info?" ~ "+info:""));
+	$("#site_name").text(profile.site+(info?": "+info:""));
 	$("#site_name").css("display","inline-block");
 }
 

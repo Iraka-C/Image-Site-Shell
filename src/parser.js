@@ -73,6 +73,11 @@ function parsePage(text,parser){
 	var imgs=parser(text);
 	if(!imgs||!imgs.length){ // No Valid Item Got
 		hideHint("Null");
+		if(text){ // all blocked
+			toAppend=true;
+			profile.page++;
+			$("#more_page_button").css("display","block");
+		}
 		return;
 	}
 

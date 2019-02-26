@@ -5,6 +5,7 @@
 function parseYandere(text){
 	var posts=$(text).find("post");
 	
+	
 	var imgs=[];
 	for(var i=0;i<posts.length;i++){
 		var img=parseYanderePost($(posts.get(i))); // posts is NOT an array!
