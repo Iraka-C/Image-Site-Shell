@@ -40,7 +40,7 @@ function makeCORSRequest(){
 
 
 /*
-	This cross origin fetcher is depricated due to the shut down of YQL.
+	This cross origin fetcher is deprecated due to the shut down of YQL.
 	Other Web APIs shall be used (without cross-origin request).
 
 (function(){
