@@ -88,6 +88,18 @@ body{
 	background-color: #EEE;
 	overflow-y: scroll;
 }
+#images{
+	text-align: center;
+	width: 100%;
+}
+#comment{
+	display: none;
+	font-size: 70%;
+	padding: 1em;
+	color: #FFF;
+	background-color: #000;
+	opacity: 0.5;
+}
 .noselect{
 	cursor: default;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -125,6 +137,6 @@ body{
 	text-align: center;
 	font-size: 100%;
 	margin: 12px;
-	color: #999;
+	color: #888;
 	display: none;
 }

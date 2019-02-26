@@ -3,10 +3,10 @@ var sites={ // all cross-origin denied site has json response.
 		urlFunc:page=>"https://yande.re/post.xml?page="+page,
 		parseXMLFunc:parseYandere
 	},
-	"Konachan":{
+	/*"Konachan":{
 		urlFunc:page=>"https://konachan.com/post.xml?page="+page,
 		parseXMLFunc:parseKonachan
-	},
+	},*/ // CORS not supported
 	"Danbooru":{
 		urlFunc:page=>"https://danbooru.donmai.us/posts.xml?page="+page,
 		parseXMLFunc:parseDanbooru
@@ -37,7 +37,7 @@ function appendPage(){
 		$.ajax({
 			url:site.urlFunc(profile.page),
 			success:text=>parsePage(text,site.parseXMLFunc),
-			/* @TODO: Add timeout error */
+			// @TODO: Add timeout error
 			error:(xhr,info,exception)=>{
 				console.log(exception);
 				sites[profile.site].invalid=1;
@@ -78,22 +78,30 @@ function parsePage(text,parser){
 
 	profile.page++;
 	imgNum=imgs.length;
-	for(var v in imgs){
-		var img=imgs[v];
+	for(let v in imgs){
+		let img=imgs[v];
 		if(img){
-			var thumbImgBox=generateThumbImg(img);
-			var coverDiv=$("<div></div>").addClass("imgCover");
-			var imgDiv=$("<div></div>").append(thumbImgBox,coverDiv).addClass("imgBox");
-			coverDiv.html(/*img.width+"&times;"+img.height+"&nbsp;"+*/fileSizeString(img.size));
-			thumbImgBox.attr("onload",()=>{
+			let thumbImgBox=generateThumbImg(img);
+			let coverDiv=$("<div>LOADING</div>").addClass("imgCover");
+			let imgDiv=$("<div></div>").append(thumbImgBox,coverDiv).addClass("imgBox");
+			$("#images").append(imgDiv); // @TODO: Here change to add null box first (Loading)
+			thumbImgBox.on("load",function(event){
 				reportLoad();
-				$("#images").append(imgDiv); // @TODO: Here change to add null box first (Loading)
+				var w=thumbImgBox[0].width;
+				var h=thumbImgBox[0].height;
+				var size=w>h?w:h;
+				if(profile.isMobile&&size<profile.minThumbSize){
+					var k=profile.minThumbSize/size;
+					thumbImgBox[0].width=w*k;
+					thumbImgBox[0].height=h*k;
+				}
+				coverDiv.html(/*img.width+"&times;"+img.height+"&nbsp;"+*/fileSizeString(img.size));
 			});
-			/*thumbImgBox.attr("onerror",()=>{
-				//imgDiv.text("Error");
-				console.log("error "+imgLoad+"/"+imgNum);
-				// @TODO: remove the image block on error
-			});*/
+			thumbImgBox.on("error",function(event){
+				reportLoad();
+				coverDiv.text("ERROR");
+				thumbImgBox.remove();
+			});
 		}
 	}
 	$("#more_page_button").css("display","block");
@@ -114,6 +122,7 @@ function generateThumbImg(imgURL){
 				if(!imgWindow._initialized){
 					imgWindow._initialized=true;
 					event.cancelBubble=true;
+					event.preventDefault=true;
 					event.returnValue=false;
 					return false;
 				}
@@ -128,6 +137,7 @@ function generateThumbImg(imgURL){
 
 function reportLoad(){
 	imgLoad++;
+	//console.log(imgLoad+"/"+imgNum+" loading...");
 	if(imgLoad>=imgNum){
 		console.log(imgLoad+":"+imgNum+" All img loaded");
 		toAppend=true;
@@ -142,7 +152,8 @@ function saveImg(src){
 	saveLink.href=src;
 	saveLink.download="";
 
-	// @TODO: Chrome download as picture: use canvas & base64
+	// #TODO: Chrome download as picture: use canvas & base64
+	// # Depricated because of canvas CORS policies
 	document.body.appendChild(saveLink);
 	saveLink.click();
 	document.body.removeChild(saveLink);
@@ -210,5 +221,5 @@ function fileSizeString(size){
 	for(;size>=1024;cnt++){
 		size/=1024;
 	}
-	return size.toFixed(2)+unit[cnt]+"B";
+	return (size>=100?Math.trunc(size):size.toFixed(1))+unit[cnt];
 }

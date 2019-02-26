@@ -8,7 +8,9 @@
 			var profile={
 				rating:2, // 2:safe, 1:R15+, 0:R18+
 				site:"",
-				page:1 // now page
+				page:1, // now page
+				minThumbSize:240,
+				isMobile:false
 			};
 			document.oncontextmenu=nocontextmenu; // for IE5+
 			function nocontextmenu(event){
@@ -38,14 +40,15 @@
 				language:(navigator.browserLanguage||navigator.language).toLowerCase()
 			}
 
-			/*
-				@TODO
-				Should be converted to css-switching method !!!!!
-			*/
 			function initEnvironment(){ // Font size according PC/mobile
-				//if(document.body.clientHeight>document.body.clientWidth){
-				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
+				if(document.body.clientHeight>document.body.clientWidth){
+				//if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
 					$("#css_id").attr("href","style_mobile.css");
+					$(document.body).css("font-size",document.body.clientWidth/20+"px");
+					profile.minThumbSize=document.body.clientWidth/3.5;
+					console.log("Minsize = "+profile.minThumbSize);
+					
+					profile.isMobile=true;
 				}
 				else{
 					$("#css_id").attr("href","style.css");
@@ -55,8 +58,12 @@
 			// Initialization on page loaded
 			$(()=>{
 				initEnvironment();
-				//startMainpage();
-				selectSite();
+				if(browser.versions.mobile||browser.versions.android||browser.versions.ios){
+					$("#comment").css("display","block");
+				}
+				else{
+					selectSite();
+				}
 			});
 		</script>
 		<!-- Individual Site Parsers -->
@@ -64,9 +71,10 @@
 		<script src="src/parser_konachan.js"></script>
 		<script src="src/parser_danbooru.js"></script>
 		<!-- General Parser & Controllers -->
+		<script src="src/FileSaver.js"></script>
 		<script src="src/parser.js"></script>
 		<script src="src/page_manager.js"></script>
-		<!--script src=".\crossoriginAJAX.js"></script--> <!-- Depricated -->
+		<script src="src/crossoriginAJAX.js"></script> <!-- YQL Depricated -->
 
 		<meta class="theme-color-meta" name="theme-color" content="#AEF"/>
 		<!-- Windows Phone -->
@@ -87,7 +95,14 @@
 
 		<div id="main_column">
 			<div id="scroll_outer" onscroll="scrollPage()">
-				<div id="images" style="text-align:center;width:100%"></div>
+				<div id="comment">
+					We detected that you are using a mobile browser client.<br/><br/>
+					Some websites refuse mobile client requests
+					and images may not properly display.<br/><br/>
+					For a better experience, please switch to the desktop mode
+					(which can probably be found in browser settings).
+				</div>
+				<div id="images"></div>
 				<div id="more_page_button" class="noselect" onclick="appendPage()">
 					&gt;&nbsp;Load More&nbsp;&lt;
 				</div>

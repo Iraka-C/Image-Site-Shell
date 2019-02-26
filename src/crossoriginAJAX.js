@@ -1,7 +1,48 @@
+/**
+	New Version of CORS - Using XmlHttpRequest2
+ */
+function createCORSRequest(method,url){
+	var xhr=new XMLHttpRequest();
+	xhr.responseType = "text";
+	if("withCredentials" in xhr){ // Chrome/Safari/Firefox.
+		xhr.open(method,url,true);
+	}
+	else if(typeof XDomainRequest!="undefined"){ // IE
+		xhr=new XDomainRequest();
+		xhr.open(method,url);
+	}
+	else{ // Unsupported
+		xhr=null;
+	}
+	return xhr;
+}
+
+// Test
+function makeCORSRequest(){
+	// bibliographica.org supports CORS
+	var url="http://bibliographica.org/";
+	var xhr=createCORSRequest("GET",url);
+	if(!xhr){
+		alert("CORS not supported");
+		return;
+	}
+	// 回应处理
+	xhr.onload=function(){
+		var text=xhr.responseText;
+		var title=getTitle(text);
+		alert('Response from CORS request to '+url+': '+title);
+	};
+	xhr.onerror=function(){
+		alert('Woops, there was an error making the request.');
+	};
+	xhr.send();
+}
+
+
 /*
 	This cross origin fetcher is depricated due to the shut down of YQL.
 	Other Web APIs shall be used (without cross-origin request).
- */
+
 (function(){
 	if(!jQuery){
 		console.log("jQuery Not Found!");
@@ -37,4 +78,4 @@
 
 	$.getCrossOriginJSON=getJSON;
 	$.getCrossOriginXML=getXML;
-})();
+})();*/

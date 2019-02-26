@@ -88,6 +88,18 @@ body{
 	background-color: #EEE;
 	overflow-y: scroll;
 }
+#images{
+	text-align: center;
+	width: 100%;
+}
+#comment{
+	display: none;
+	font-size: 70%;
+	padding: 1em;
+	color: #FFF;
+	background-color: #000;
+	opacity: 0.5;
+}
 .noselect{
 	cursor: default;
 	-webkit-touch-callout: none; /* iOS Safari */
