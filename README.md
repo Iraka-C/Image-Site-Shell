@@ -27,3 +27,10 @@ By recomposing the UI, an easier environment to browse pictures is provided, and
 * When a new page is added at the original site, duplicated images may appear. This is not a big problem as you can continue asking the shell to load another new page.
 * In Chrome, left-click to download is deprecated because of safety concerns. Don't left-click on an image as it clears all the loaded contents. Instead, right-click and use the **save-image-as** function.
 * CORS is disabled by some sites (such as konachan) and Image Site Viewer doesn't support laying out the posts of these sites.
+
+## TODOs
+
+* Add page-separated control: each page in 1 block, useful for checking duplication / increase rolling speed
+* Manage image IDs to reduce duplicated loadings between pages / switching modes
+* Manage scrolling to make invisible pages hidden from DOM
+* Manage memory usage

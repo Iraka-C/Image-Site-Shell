@@ -86,6 +86,10 @@ function parsePage(text,parser){
 	for(let v in imgs){
 		let img=imgs[v];
 		if(img){
+			/**
+			 * @TODO: Check if the image is already posted
+			 * in the list
+			 */
 			let thumbImgBox=generateThumbImg(img);
 			let coverDiv=$("<div>LOADING</div>").addClass("imgCover");
 			let imgDiv=$("<div></div>").append(thumbImgBox,coverDiv).addClass("imgBox");
@@ -124,9 +128,12 @@ function generateThumbImg(imgURL){
 	box.addClass("img");
 	box.mousedown(event=>{
 		if(event.button==0){
-			if(!profile.isChromeDesktop){
+			/*if(!profile.isChromeDesktop){
 				saveImg(imgURL.src);
-			}
+			}*/
+			// Open a new window to show the image
+			// Chrome is EVERYWHERE !!!
+			window.open(imgURL.src);
 		}
 		else{ // @TODO: zoom in at the current page ?
 			event.cancelBubble=true;
